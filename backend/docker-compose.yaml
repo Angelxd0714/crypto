@@ -12,3 +12,19 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend-network
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+
+volumes:
+  postgres_data:
+
+networks:
+  backend-network:
