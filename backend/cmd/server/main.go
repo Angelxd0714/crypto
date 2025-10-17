@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "gin-quickstart/docs" // Use your project's module path here
 	auth "gin-quickstart/internal/auth/controller"
 	"gin-quickstart/internal/auth/services"
 	"gin-quickstart/internal/database"
@@ -48,6 +49,5 @@ func main() {
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	router.Run() // listens on 0.0.0.0:8080 by default
 }
