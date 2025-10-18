@@ -5,6 +5,7 @@ import (
 	auth "gin-quickstart/internal/auth/controller"
 	"gin-quickstart/internal/auth/services"
 	"gin-quickstart/internal/database"
+	"gin-quickstart/internal/websocket"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -37,6 +38,9 @@ func main() {
 	authService := services.NewAuthService(db)
 	authController := auth.NewAuthController(authService)
 
+	broker := websocket.NewBroker()
+	go broker.Run()
+
 	router := gin.Default()
 
 	v1 := router.Group("/api/v1")
@@ -46,6 +50,9 @@ func main() {
 			authRoutes.POST("/register", authController.Register)
 			authRoutes.POST("/login", authController.Login)
 		}
+		v1.GET("/ws", func(c *gin.Context) {
+			broker.ServeWs(c)
+		})
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
